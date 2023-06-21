@@ -10,7 +10,7 @@ const userRoute = require('./routes/user')
 const app = express();
 dotenv.config()
 // JSON Body Parser- allows to take json as request body
-app.use(express.json())
+ .use(express.json())
 
 
 //Connecting to database
