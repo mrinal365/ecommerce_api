@@ -9,4 +9,5 @@ router.post('/',(req,res)=>{
     console.log("hey")
     res.json(input)
 })
+
 module.exports= router

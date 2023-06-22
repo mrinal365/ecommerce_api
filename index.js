@@ -5,12 +5,13 @@ const dotenv = require('dotenv')
 
 //Import Routes below
 const userRoute = require('./routes/user')
+const authRoute = require('./routes/auth')
 
 // Configure below 
 const app = express();
 dotenv.config()
 // JSON Body Parser- allows to take json as request body
- .use(express.json())
+app.use(express.json())
 
 
 //Connecting to database
@@ -25,7 +26,9 @@ app.use('/api/test',(req,res)=>{
     res.json("hello")
 })
 
+app.use('/auth',authRoute)
 app.use('/user',userRoute)
+
 
 // Listening to server
 app.listen(process.env.PORT|| 8001, () => {
