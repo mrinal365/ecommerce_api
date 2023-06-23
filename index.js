@@ -22,10 +22,6 @@ mongoose.connect(process.env.MONGO_URL)
     .catch((err) => { console.log(err.message) })
 
 
-app.use('/api/test',(req,res)=>{
-    res.json("hello")
-})
-
 app.use('/auth',authRoute)
 app.use('/user',userRoute)
 
