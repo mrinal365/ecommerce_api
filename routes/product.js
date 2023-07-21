@@ -3,111 +3,86 @@ const Product = require('../models/Product');
 const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require('./verifyToken');
 
 //CREATE
-router.post('/')
+router.post('/', verifyTokenAndAuthorization, async(req,res)=>{
+    const newProduct = new Product(req.body);
+
+    try{
+        const savedProduct = await newProduct.save();
+        res.status(200).json(savedProduct)
+    } catch(err){
+        res.status(500).json(err)
+    }
+})
 
 
 // UPDATE
-router.put('/:id', verifyTokenAndAuthorization, async (req, res) => {
-    if (req.body.password) {
-        req.body.password = CryptoJS.AES.encrypt(
-            req.body.password,
-            process.env.PASS_SEC
-        ).toString()
-    }
+router.put('/:id', verifyTokenAndAdmin, async (req, res) => {
+ 
     try {
-        console.log("req", req.params.id)
-        console.log("req", req.body)
-        const updatedUser = await User.findByIdAndUpdate(
+
+        const updatedProduct = await Product.findByIdAndUpdate(
             req.params.id,
             {
                 $set: req.body,
             },
             { new: true }
         );
-        // console.log("vgjhgv", updatedUser)
-        res.status(200).json(updatedUser)
+        res.status(200).json(updatedProduct)
     } catch (err) {
-        // console.log("gfh",err.message)
         res.status(500).json(err)
     }
 });
 
 
 // DELETE
-router.delete('/:id', verifyTokenAndAuthorization, async(req,res)=>{
+router.delete('/:id', verifyTokenAndAdmin, async(req,res)=>{
     try{
-        await User.findByIdAndDelete(
-            req.params.id,
-            {$set: req.body},
-            {new: true}
+        await Product.findByIdAndDelete(
+            req.params.id
         )
-        res.status(200).json("User Has been deleted");
+        res.status(200).json("Product Has been deleted");
     } catch(err){
         res.status(500).json(err)
     }
 })
 
-//GET USER
-router.get('/find/:id', verifyTokenAndAdmin, async(req,res)=>{
+//GET PRODUCT
+router.get('/find/:id', async(req,res)=>{
     try{
-        const user = await User.findById(req.params.id);
-        const { password, ...others } = user._doc;
-        res.status(200).json(others);
+        const product = await Product.findById(req.params.id);
+        // const data = product._doc;
+        res.status(200).json(product);
     } catch(err){
         res.status(500).json(err)
     }
 })
 
-// GET ALL USERS
-router.get('/users', verifyTokenAndAdmin, async(req,res)=>{
-    const query = req.query.new;
-    console.log("query",query)
+// GET ALL PRODUCTS
+router.get('/products', verifyTokenAndAdmin, async(req,res)=>{
+    const qNew = req.query.new;
+    const qCategory = req. query.category;
     try{
-        const users = query 
-            ? await User.find().sort({ _id: -1 }).limit(1)
-            : await User.find();
-            // const { password, ...others } = user._doc;
-        res.status(200).json(users);
+        let products;
+        if(qNew){
+            products = await Product.find().sort({createdAt: -1}).limit(1)
+        } else if(qCategory){
+            products = await Product.find({
+                categories: {
+                    $in: [qCategory],
+                },
+            });
+        } else {
+            products = await Product.find();
+        }
+
+        res.status(200).json(products);
     } catch(err){
         res.status(500).json(err)
     }
 })
 
 // GET USER STATS
-router.get('/stats',verifyTokenAndAuthorization,async (req, res)=>{
-    const date = new Date();
-    //get last year date
-    const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
-    console.log("hwuighwd")
-    try{
-        const data = await User.aggregate([
-            { $match: { createdAt: { $gte: lastYear}} },
-            {
-                $project: {
-                    month: {
-                        $month: "$createdAt"
-                    },
-                }
-            },
-            {
-                $group:{
-                    _id: "$month",
-                    total: {$sum: 1},
-                }
-            }
-        ])
-        res.status(200).json(data)
-    } catch(err){
-        res.status(500).json(err)
-    }
 
-})
-
-router.post('/', (req, res) => {
-    const input = req.body.input;
-    console.log("hey")
-    res.json(input)
-})
 
 module.exports = router
 

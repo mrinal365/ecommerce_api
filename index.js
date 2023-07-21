@@ -1,11 +1,13 @@
 // Import libraries below 
 const express = require('express');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
 
 //Import Routes below
-const userRoute = require('./routes/user')
-const authRoute = require('./routes/auth')
+const userRoute = require('./routes/user');
+const authRoute = require('./routes/auth');
+const productRoute = require('./routes/product');
+const cartRoute = require('./routes/cart');
 
 // Configure below 
 const app = express();
@@ -22,8 +24,10 @@ mongoose.connect(process.env.MONGO_URL)
     .catch((err) => { console.log(err.message) })
 
 
-app.use('/auth',authRoute)
-app.use('/user',userRoute)
+app.use('/auth', authRoute)
+app.use('/user', userRoute)
+app.use('/product', productRoute)
+app.use('/cart', cartRoute)
 
 
 // Listening to server
