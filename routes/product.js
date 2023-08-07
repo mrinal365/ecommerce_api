@@ -58,7 +58,9 @@ router.get('/find/:id', async(req,res)=>{
 })
 
 // GET ALL PRODUCTS
-router.get('/products', verifyTokenAndAdmin, async(req,res)=>{
+router.get('/products', async(req,res)=>{  //remove this
+// router.get('/products', verifyTokenAndAdmin, async(req,res)=>{  // keep this
+
     const qNew = req.query.new;
     const qCategory = req. query.category;
     try{
