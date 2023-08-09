@@ -9,7 +9,8 @@ const userRoute = require('./routes/user');
 const authRoute = require('./routes/auth');
 const productRoute = require('./routes/product');
 const cartRoute = require('./routes/cart');
-const stripeRoute = require('./routes/stripe')
+const stripeRoute = require('./routes/stripe');
+const orderRoute = require('./routes/order')
 
 // Configure below 
 const app = express();
@@ -34,7 +35,7 @@ app.use('/user', userRoute)
 app.use('/product', productRoute)
 app.use('/cart', cartRoute)
 app.use('/stripe',stripeRoute)
-
+app.use('/order',orderRoute)
 
 // Listening to server
 app.listen(process.env.PORT|| 8001, () => {

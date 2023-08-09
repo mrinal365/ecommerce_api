@@ -74,7 +74,9 @@ router.get('/products', async(req,res)=>{  //remove this
                 },
             });
         } else {
+            console.log("productsfetching start")
             products = await Product.find();
+            console.log("productsfetching end")
         }
 
         res.status(200).json(products);
