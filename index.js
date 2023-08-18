@@ -16,7 +16,7 @@ const orderRoute = require('./routes/order')
 const app = express();
 dotenv.config()
 
-app.use(cors());
+app.use('*',cors());
 
 // JSON Body Parser- allows to take json as request body
 app.use(express.json())
