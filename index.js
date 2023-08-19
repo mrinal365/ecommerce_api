@@ -16,7 +16,11 @@ const orderRoute = require('./routes/order')
 const app = express();
 dotenv.config()
 
-app.use('*',cors());
+app.use(
+    cors({
+        origin: '*'
+    })
+);
 
 // JSON Body Parser- allows to take json as request body
 app.use(express.json())
@@ -34,11 +38,11 @@ app.use('/auth', authRoute)
 app.use('/user', userRoute)
 app.use('/product', productRoute)
 app.use('/cart', cartRoute)
-app.use('/stripe',stripeRoute)
-app.use('/order',orderRoute)
+app.use('/stripe', stripeRoute)
+app.use('/order', orderRoute)
 
 // Listening to server
-app.listen(process.env.PORT|| 8001, () => {
+app.listen(process.env.PORT || 8001, () => {
     console.log("Server is connected")
 })
 
